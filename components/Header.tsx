@@ -1,16 +1,36 @@
-'use client'
+"use client";
 
-import Image from 'next/image'
-import React from 'react'
-import logo from '@/images/Trello_logo.png'
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import logo from "@/images/Trello_logo.png";
 import { HiMagnifyingGlass, HiUserCircle } from "react-icons/hi2";
-import Avatar from 'react-avatar';
-import { useBoardStore } from '@/store/BoardStore';
-
+import Avatar from "react-avatar";
+import { useBoardStore } from "@/store/BoardStore";
+import fetchSuggestion from "@/lib/fetchSuggestion";
 
 const Header = () => {
+  const [board, searchString, setSearchString] = useBoardStore((state) => [
+    state.board,
+    state.searchString,
+    state.setSearchString,
+  ]);
 
-  const [searchString, setSearchString] = useBoardStore((state) => [state.searchString, state.setSearchString])
+  const [loading, setLoading] = useState<boolean>(false);
+  const [suggestions, setSuggestions] = useState<string>("");
+
+  useEffect(()=> {
+    if(board.columns.size === 0) return;
+    setLoading(true);
+
+    const fetchSuggestionsFunc = async () => {
+      const suggestion = await fetchSuggestion(board);
+      setSuggestions(suggestion);
+      setLoading(false);
+    }
+
+    fetchSuggestionsFunc();
+
+  }, [board])
 
   return (
     <header>
@@ -42,13 +62,18 @@ const Header = () => {
         </div>
       </div>
       <div className="flex items-center justify-center px-5 md:py-5 py-2">
-        <p className="flex items-center text-sm font-light pr-5 shadow-xl rounded-xl w-fit bg-white italic max-w-3xl text-[#0055D1] p-5">
-          <HiUserCircle className="inline-block h-10 w-10 text-[#0055D1] mr-1" />
-          GPT is summarising your tasks for the day...
-        </p>
+        <div className="flex items-center text-sm font-light pr-5 shadow-xl rounded-xl w-fit bg-white italic max-w-3xl text-[#0055D1] p-5">
+        <HiUserCircle className={`inline-block h-10 w-10 text-[#0055D1] mr-1 
+          ${loading && "animate-spin"}
+        `} />
+        {
+          suggestions && !loading ? suggestions : "GPT is summarising your tasks for the day..."
+        }
+        </div>
+          
       </div>
     </header>
   );
-}
+};
 
-export default Header
+export default Header;
