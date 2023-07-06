@@ -1,6 +1,5 @@
 interface Board {
     columns: Map<TypedColumn, Column>;
-
 }
 
 type TypedColumn = "todo" | "in-progress" | "done";
