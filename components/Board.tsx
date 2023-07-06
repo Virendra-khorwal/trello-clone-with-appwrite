@@ -85,7 +85,6 @@ const Board = () => {
 
             // Update in DB
             updateTodoInDB(todoMoved, finishCol.id);
-            console.log(finishCol.id)
 
             setBoardState({
                 ...board,
