@@ -13,7 +13,7 @@ const idToColumnText : {
   [key in TypedColumn]: string;
 } = {
   'todo': 'To Do',
-  'in-progress': 'In Progress',
+  'inprogress': 'In Progress',
   'done': 'Done'
 }
 
