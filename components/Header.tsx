@@ -5,9 +5,13 @@ import React from 'react'
 import logo from '@/images/Trello_logo.png'
 import { HiMagnifyingGlass, HiUserCircle } from "react-icons/hi2";
 import Avatar from 'react-avatar';
+import { useBoardStore } from '@/store/BoardStore';
 
 
 const Header = () => {
+
+  const [searchString, setSearchString] = useBoardStore((state) => [state.searchString, state.setSearchString])
+
   return (
     <header>
       <div className="absolute top-0 left-0 w-full h-96 bg-gradient-to-br from-pink-400 to-[#0055D1] rounded-md filter blur-3xl opacity-50 -z-50" />
@@ -21,6 +25,8 @@ const Header = () => {
               type="text"
               placeholder="Search"
               className="flex-1 outline-none p-2"
+              value={searchString}
+              onChange={(e) => setSearchString(e.target.value)}
             />
             <button type="submit" hidden>
               Search
